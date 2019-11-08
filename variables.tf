@@ -12,7 +12,7 @@ variable "stage" {
 }
 
 variable "attributes" {
-  type        = "list"
+  type        = list
   default     = []
   description = "Additional attributes (e.g. `1`)"
 }
@@ -27,6 +27,7 @@ variable "datadog_aws_account_id" {
 }
 
 variable "integrations" {
-  type        = "list"
+  type        = list
   description = "List of AWS permission names to apply for different integrations (`all`, `core`, `rds`)"
 }
+
