@@ -15,21 +15,13 @@ data "aws_iam_policy_document" "lambda" {
   }
 }
 
-module "lambda_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.16.0"
-  namespace  = var.namespace
-  stage      = var.stage
-  name       = var.name
-  attributes = [compact(concat(var.attributes, ["lambda"]))]
-}
-
 locals {
   lambda_count = contains(split(",", lower(join(",", var.integrations))), "lambda") ? 1 : 0
 }
 
 resource "aws_iam_policy" "lambda" {
   count  = local.lambda_count
-  name   = module.lambda_label.id
+  name   = "${local.name}-lambda"
   policy = data.aws_iam_policy_document.lambda.json
 }
 

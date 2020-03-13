@@ -76,21 +76,13 @@ data "aws_iam_policy_document" "all" {
   }
 }
 
-module "all_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.16.0"
-  namespace  = var.namespace
-  stage      = var.stage
-  name       = var.name
-  attributes = [compact(concat(var.attributes, ["all"]))]
-}
-
 locals {
   all_count = contains(split(",", lower(join(",", var.integrations))), "all") ? 1 : 0
 }
 
 resource "aws_iam_policy" "all" {
   count  = local.all_count
-  name   = module.all_label.id
+  name   = "${local.name}-all"
   policy = data.aws_iam_policy_document.all.json
 }
 
