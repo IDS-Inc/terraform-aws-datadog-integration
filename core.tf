@@ -17,21 +17,13 @@ data "aws_iam_policy_document" "core" {
   }
 }
 
-module "core_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.16.0"
-  namespace  = var.namespace
-  stage      = var.stage
-  name       = var.name
-  attributes = [compact(concat(var.attributes, ["core"]))]
-}
-
 locals {
   core_count = contains(split(",", lower(join(",", var.integrations))), "core") ? 1 : 0
 }
 
 resource "aws_iam_policy" "core" {
   count  = local.core_count
-  name   = module.core_label.id
+  name   = "${local.name}-core"
   policy = data.aws_iam_policy_document.core.json
 }
 
